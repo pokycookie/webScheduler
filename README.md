@@ -4,3 +4,4 @@
 
 - [ ] IndexedDB
 - [ ] Extension (iframe or else...)
+- [ ] Calender
