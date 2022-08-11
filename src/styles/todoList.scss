@@ -1,0 +1,26 @@
+.todoList {
+  width: 100%;
+  padding: 15px 5px 10px 5px;
+  border-bottom: 1px solid white;
+  display: grid;
+  grid-template-columns: 20px 1fr 23px 23px;
+
+  ._checkbox {
+    justify-self: center;
+    align-self: center;
+  }
+  p {
+    justify-self: start;
+    align-self: center;
+    margin-left: 5px;
+    font-size: 14px;
+  }
+  .icon {
+    justify-self: center;
+    align-self: center;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: opacity 0.3s ease-in-out;
+  }
+}

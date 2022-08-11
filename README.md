@@ -2,6 +2,7 @@
 
 ## TODO List
 
-- [ ] IndexedDB
+- [x] IndexedDB
 - [ ] Extension (iframe or else...)
-- [ ] Calender
+- [ ] Until...
+- [ ] Font family
