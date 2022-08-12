@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import TodoList from "./components/todoList";
 import IndexedDB from "./indexedDB";
+import { IData } from "./type";
 
 interface IProps {
   power: boolean;
@@ -12,7 +13,7 @@ interface IProps {
 
 export default function Scheduler(props: IProps) {
   const [inputStr, setInputStr] = useState<string>("");
-  const [dataArr, setDataArr] = useState<any[]>([]);
+  const [dataArr, setDataArr] = useState<IData[]>([]);
 
   const refreshData = async () => {
     if (props.DB) {
@@ -28,16 +29,17 @@ export default function Scheduler(props: IProps) {
   const submit = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       if (e.shiftKey === true) {
-        refreshData();
+        await refreshData();
       } else {
         if (props.DB) {
-          const data = {
+          const data: IData = {
             updated: new Date(),
             content: inputStr,
+            checked: false,
           };
           IndexedDB.create(props.DB, "todo", data);
         }
-        refreshData();
+        await refreshData();
         setInputStr("");
       }
     }
@@ -62,17 +64,19 @@ export default function Scheduler(props: IProps) {
           <FontAwesomeIcon className="menu" icon={faBars} />
         </header>
         <input
+          className="mainInput"
           onKeyUp={submit}
           placeholder="💡 Please enter your idea!"
           value={inputStr}
           onChange={({ target }) => setInputStr(target.value)}
+          autoFocus
         />
         <div className="todoListArea">
           {dataArr.map((element, index) => {
             return (
               <TodoList
-                data={element}
                 key={index}
+                data={element}
                 DB={props.DB}
                 refreshData={refreshData}
               />

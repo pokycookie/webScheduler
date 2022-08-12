@@ -1,26 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
+
 .todoList {
   width: 100%;
-  padding: 15px 5px 10px 5px;
+  padding: 15px 5px 7px 5px;
   border-bottom: 1px solid white;
   display: grid;
-  grid-template-columns: 20px 1fr 23px 23px;
+  grid-template-columns: 20px 1fr 23px;
+  transition: all 0.3s;
+  overflow: hidden;
 
   ._checkbox {
     justify-self: center;
     align-self: center;
   }
+
   p {
+    height: 20px;
     justify-self: start;
     align-self: center;
     margin-left: 5px;
     font-size: 14px;
+    color: #343a40;
+    font-family: "Noto Sans KR", "Karla", sans-serif;
   }
+
+  .todoListInput {
+    height: 20px;
+    justify-self: start;
+    align-self: center;
+    margin-left: 5px;
+    font-size: 14px;
+    color: #343a40;
+    font-family: "Noto Sans KR", "Karla", sans-serif;
+    background-color: rgba($color: white, $alpha: 0);
+    border: none;
+    box-sizing: border-box;
+    padding: 0px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
   .icon {
     justify-self: center;
     align-self: center;
     color: white;
     font-size: 13px;
     cursor: pointer;
-    transition: opacity 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+  .delete:hover {
+    color: red;
   }
 }

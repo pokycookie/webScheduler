@@ -5,7 +5,7 @@ import "./styles/App.scss";
 
 function App() {
   // Turn on or off extension
-  const [power, setPower] = useState<boolean>(false);
+  const [power, setPower] = useState<boolean>(true);
   const [IDB, setIDB] = useState<IDBDatabase>();
 
   // Open DB

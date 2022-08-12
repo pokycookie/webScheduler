@@ -1,3 +1,5 @@
+import { IData, IUpdateOptions } from "./type";
+
 export default class IndexedDB {
   static open(name: string, version: number): Promise<IDBDatabase> {
     // Open DB
@@ -75,8 +77,8 @@ export default class IndexedDB {
   static update(
     DB: IDBDatabase,
     store: string,
-    query: IDBValidKey | IDBKeyRange,
-    data: {}
+    query: IDBValidKey,
+    data: IUpdateOptions
   ): Promise<any> {
     // Open transaction
     const transaction = DB.transaction(store, "readwrite");
@@ -90,11 +92,30 @@ export default class IndexedDB {
         rejects(request.error);
       };
       request.onsuccess = () => {
-        const updateReq = objectStore.put(data);
+        const prevData: IData = request.result;
+
+        if (typeof data.checked !== "undefined") {
+          prevData.checked = data.checked;
+        }
+        if (typeof data.content !== "undefined") {
+          prevData.content = data.content;
+        }
+        if (typeof data.updated !== "undefined") {
+          prevData.updated = data.updated;
+        }
+        if (typeof data.start !== "undefined") {
+          prevData.start = data.start;
+        }
+        if (typeof data.end !== "undefined") {
+          prevData.end = data.end;
+        }
+
+        const updateReq = objectStore.put(prevData);
         updateReq.onerror = () => {
           rejects(updateReq.error);
         };
         updateReq.onsuccess = () => {
+          console.log("updated");
           resolve(updateReq.result);
         };
       };
@@ -123,7 +144,7 @@ export default class IndexedDB {
     });
   }
 
-  static readAll(DB: IDBDatabase, store: string): Promise<any[]> {
+  static readAll(DB: IDBDatabase, store: string): Promise<IData[]> {
     // Open transaction
     const transaction = DB.transaction(store, "readonly");
 
@@ -140,7 +161,6 @@ export default class IndexedDB {
         const cursor = request.result;
 
         if (cursor) {
-          console.log(cursor.value);
           result.push(cursor.value);
           cursor.continue();
         } else {
