@@ -72,7 +72,7 @@ export default function TodoList(props: IProps) {
           className="todoListInput"
           value={inputStr}
           readOnly
-          style={{ textDecoration: "line-through", color: "#A760FF" }}
+          style={{ textDecoration: "line-through", color: "#a66cff" }}
         />
       ) : (
         <input

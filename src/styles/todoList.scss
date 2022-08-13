@@ -26,6 +26,7 @@
   }
 
   .todoListInput {
+    width: 250px;
     height: 20px;
     justify-self: start;
     align-self: center;
@@ -37,6 +38,9 @@
     border: none;
     box-sizing: border-box;
     padding: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
     &:focus {
       outline: none;

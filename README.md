@@ -4,5 +4,7 @@
 
 - [x] IndexedDB
 - [ ] Extension (iframe or else...)
-- [ ] Until...
-- [ ] Font family
+- [ ] Calendar
+- [x] Font family
+- [x] Checkbox
+- [ ] Repeat Todo

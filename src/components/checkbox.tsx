@@ -12,7 +12,7 @@ export default function Checkbox(props: IProps) {
     <FontAwesomeIcon
       className="_checkbox"
       icon={props.checked ? faSquareCheck : faSquare}
-      style={{ color: props.checked ? "#590696" : "white" }}
+      style={{ color: props.checked ? "#a66cff" : "white" }}
       onClick={props.onClick}
     />
   );
