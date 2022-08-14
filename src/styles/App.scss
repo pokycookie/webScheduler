@@ -1,89 +1,83 @@
 .webScheduler {
   width: 350px;
-  height: 100vh;
+  height: 400px;
   position: fixed;
   top: 0;
   right: 0;
+
+  background-color: #d2b5ff;
+  box-sizing: border-box;
+  padding: 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
 
-  .scheduler {
-    width: 100%;
-    height: 100%;
-    transition: all 1s ease-in-out;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  .powerBtn {
+    width: 100px;
+    height: 20px;
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: rgba($color: #a66cff, $alpha: 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
     box-sizing: border-box;
+    padding: 0px;
 
-    .powerBtn {
-      width: 20px;
-      height: 100px;
-      border: none;
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-      background-color: rgba($color: #a66cff, $alpha: 0.1);
-      cursor: pointer;
-      transition: background-color 0.3s ease-in-out;
-
-      &:hover {
-        background-color: rgba($color: #a66cff, $alpha: 1);
-      }
+    &:hover {
+      background-color: rgba($color: #a66cff, $alpha: 1);
     }
+  }
 
-    .main {
-      width: 100%;
-      height: 100%;
-      background-color: #d2b5ff;
-      box-sizing: border-box;
-      padding: 10px;
+  header {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0px 10px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
 
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+    .menu {
+      cursor: pointer;
+      color: white;
+    }
+  }
 
-      header {
-        width: 100%;
-        height: 30px;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 0px 10px;
-        box-sizing: border-box;
-        margin-bottom: 5px;
+  .mainInput {
+    width: 100%;
+    height: 45px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 10px;
+    background-color: #e0cbff;
+    padding: 0px 10px;
+    font-size: 14px;
 
-        .menu {
-          cursor: pointer;
-          color: white;
-        }
-      }
+    &:focus {
+      outline: 2px solid white;
+    }
+  }
 
-      .mainInput {
-        width: 100%;
-        height: 45px;
-        box-sizing: border-box;
-        border: none;
-        border-radius: 10px;
-        background-color: #e0cbff;
-        padding: 0px 10px;
-        font-size: 14px;
+  .todoListArea {
+    width: 100%;
+    height: 320px;
+    background-color: #e0cbff;
+    padding: 0px 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
 
-        &:focus {
-          outline: 2px solid white;
-        }
-      }
-
-      .todoListArea {
-        width: 100%;
-        height: 100%;
-        margin-top: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-      }
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      background-color: #a66cff;
     }
   }
 }

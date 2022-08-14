@@ -1,6 +1,11 @@
 @import "./todoList.scss";
 @import "./reset.scss";
 
+body {
+  width: 350px;
+  height: 400px;
+}
+
 ._checkbox {
   color: white;
   cursor: pointer;
