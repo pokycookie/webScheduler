@@ -21,16 +21,6 @@
     align-self: center;
   }
 
-  p {
-    height: 20px;
-    justify-self: start;
-    align-self: center;
-    margin-left: 5px;
-    font-size: 14px;
-    color: #343a40;
-    font-family: "Noto Sans KR", "Karla", sans-serif;
-  }
-
   .todoListInput {
     width: 250px;
     height: 20px;
@@ -57,7 +47,7 @@
     justify-self: center;
     align-self: center;
     color: white;
-    font-size: 13px;
+    font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 
@@ -66,6 +56,6 @@
     }
   }
   .delete:hover {
-    color: red;
+    color: #ff1e00;
   }
 }

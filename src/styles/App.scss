@@ -46,18 +46,36 @@
     }
   }
 
-  .mainInput {
+  .mainInputArea {
     width: 100%;
-    height: 45px;
-    box-sizing: border-box;
-    border: none;
-    border-radius: 10px;
-    background-color: #e0cbff;
-    padding: 0px 10px;
-    font-size: 14px;
+    position: relative;
 
-    &:focus {
-      outline: 2px solid white;
+    .mainInput {
+      width: 100%;
+      height: 45px;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 10px;
+      background-color: #e0cbff;
+      padding: 0px 10px;
+      font-size: 14px;
+
+      &:focus {
+        outline: 2px solid white;
+      }
+    }
+
+    .calendar {
+      position: absolute;
+      right: 10px;
+      top: 14px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      &:hover {
+        transform: translateY(-2px);
+      }
     }
   }
 
@@ -65,7 +83,7 @@
     width: 100%;
     height: 320px;
     background-color: #e0cbff;
-    padding: 0px 10px;
+    padding: 0px 10px 10px 10px;
     box-sizing: border-box;
     border-radius: 10px;
     overflow-x: hidden;
@@ -79,5 +97,10 @@
       border-bottom-right-radius: 10px;
       background-color: #a66cff;
     }
+  }
+
+  .calendarArea {
+    overflow: hidden;
+    transition: height 0.5s ease-in-out;
   }
 }

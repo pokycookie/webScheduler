@@ -3,7 +3,7 @@
 ## TODO List
 
 - [x] IndexedDB
-- [ ] Extension (iframe or else... => change popup type)
+- [x] Extension (iframe or else... => change popup type)
 - [ ] Calendar
 - [x] Font family
 - [x] Checkbox
