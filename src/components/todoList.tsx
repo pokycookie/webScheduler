@@ -8,19 +8,25 @@ import Checkbox from "./checkbox";
 interface IProps {
   data: IData;
   DB?: IDBDatabase;
-  refreshData: () => void;
+  refreshData: () => Promise<void>;
+  setUndo: React.Dispatch<React.SetStateAction<IData | undefined>>;
 }
 
 export default function TodoList(props: IProps) {
   const [enter, setEnter] = useState<boolean>(false);
   const [inputStr, setInputStr] = useState<string>(props.data.content);
   const [checked, setChecked] = useState<boolean>(props.data.checked);
+  const [deadline, setDeadline] = useState<boolean>(false);
 
   const deleteData = async (key: any) => {
-    if (props.DB && props.data._id) {
-      await IndexedDB.delete(props.DB, "todo", props.data._id);
-      props.refreshData();
-    }
+    setDeadline(true);
+    setTimeout(async () => {
+      if (props.DB && props.data._id) {
+        await IndexedDB.delete(props.DB, "todo", props.data._id);
+        props.setUndo(props.data);
+        props.refreshData();
+      }
+    }, 300);
   };
 
   const updateData = async () => {
@@ -65,6 +71,9 @@ export default function TodoList(props: IProps) {
       className="todoList"
       onMouseEnter={() => setEnter(true)}
       onMouseLeave={() => setEnter(false)}
+      style={
+        deadline ? { height: "0px", padding: "0px", border: "none" } : undefined
+      }
     >
       <Checkbox checked={checked} onClick={checkboxHandler} />
       {checked ? (

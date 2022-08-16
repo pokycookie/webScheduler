@@ -8,3 +8,6 @@
 - [x] Font family
 - [x] Checkbox
 - [ ] Repeat Todo
+- [ ] Color theme option
+- [ ] Language option
+- [x] Undo

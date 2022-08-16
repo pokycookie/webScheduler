@@ -1,9 +1,7 @@
 .webScheduler {
   width: 350px;
   height: 400px;
-  position: fixed;
-  top: 0;
-  right: 0;
+  position: relative;
 
   background-color: #d2b5ff;
   box-sizing: border-box;
@@ -12,6 +10,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
 
   .powerBtn {
     width: 100px;
@@ -108,8 +107,47 @@
     }
   }
 
+  .undoBtn {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+
+    width: 60px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    animation: undoBtnCreate 0.5s ease-in-out;
+    font-size: 14px;
+    color: #343a40;
+    font-family: "Noto Sans KR", "Karla", sans-serif;
+    font-weight: 600;
+    background-color: white;
+
+    .undoIcon {
+      transition: all 0.3s ease-in-out;
+      font-size: 16px;
+    }
+
+    &:hover {
+      .undoIcon {
+        transform: rotate(-30deg);
+        color: #ff1e00;
+      }
+    }
+  }
+
   .calendarArea {
     overflow: hidden;
     transition: height 0.5s ease-in-out;
+  }
+}
+
+@keyframes undoBtnCreate {
+  0% {
+    transform: translateY(50px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }

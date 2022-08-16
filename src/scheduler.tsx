@@ -1,4 +1,4 @@
-import { faBars, faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import React, {
@@ -9,8 +9,8 @@ import React, {
   useState,
 } from "react";
 import Calendar from "react-calendar";
-// import "react-calendar/dist/Calendar.css";
 import TodoList from "./components/todoList";
+import UndoBtn from "./components/undoBtn";
 import IndexedDB from "./indexedDB";
 import { IData } from "./type";
 
@@ -31,6 +31,7 @@ export default function Scheduler(props: IProps) {
   const [inputFocus, setInputFocus] = useState<boolean>(false);
   const [calendar, setCalendar] = useState<boolean>(false);
   const [optionDate, setOptionDate] = useState(new Date());
+  const [undo, setUndo] = useState<IData>();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +56,6 @@ export default function Scheduler(props: IProps) {
         if (a.end > b.end) return 1;
         else return -1;
       });
-      console.log(tempData);
       setDataArr(tempData);
     }
   };
@@ -75,7 +75,7 @@ export default function Scheduler(props: IProps) {
           checked: false,
           end: calendar ? optionDate : undefined,
         };
-        IndexedDB.create(props.DB, "todo", data);
+        await IndexedDB.create(props.DB, "todo", data);
         setCalendar(false);
         setInputStr("");
         await refreshData();
@@ -151,6 +151,7 @@ export default function Scheduler(props: IProps) {
                     data={data}
                     DB={props.DB}
                     refreshData={refreshData}
+                    setUndo={setUndo}
                   />
                 );
               })}
@@ -158,6 +159,14 @@ export default function Scheduler(props: IProps) {
           );
         })}
       </div>
+      {undo ? (
+        <UndoBtn
+          undo={undo}
+          setUndo={setUndo}
+          refreshData={refreshData}
+          DB={props.DB}
+        />
+      ) : null}
     </>
   );
 }
