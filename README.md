@@ -11,3 +11,5 @@
 - [ ] Color theme option
 - [ ] Language option
 - [x] Undo
+- [ ] Postponed list
+- [ ] Seperate completed list

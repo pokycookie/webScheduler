@@ -22,7 +22,7 @@ export default function UndoBtn(props: IProps) {
 
   useInterval(() => {
     props.setUndo(undefined);
-  }, 3000);
+  }, 4000);
 
   return (
     <button className="undoBtn" onClick={undoData}>
