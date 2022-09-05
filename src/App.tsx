@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const openDB = async () => {
       try {
-        const DB = await IndexedDB.open("CWS", 1);
+        const DB = await IndexedDB.open("CWS", 2);
         setIDB(DB);
       } catch (err) {
         console.error(err);

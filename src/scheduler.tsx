@@ -1,13 +1,7 @@
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
 import TodoList from "./components/todoList";
 import UndoBtn from "./components/undoBtn";
@@ -42,8 +36,11 @@ export default function Scheduler(props: IProps) {
       const endArr: string[] = [];
 
       IDB.forEach((element) => {
-        const key = element.end ? element.end.toISOString() : "0000";
+        let key = element.end ? element.end.toISOString() : "0000";
+        const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
+        if (key !== "0000" && new Date(key) <= current) key = "overdue";
         const index = endArr.findIndex((E) => E === key);
+
         if (index === -1) {
           tempData.push({ end: key, data: [] });
           tempData[tempData.length - 1].data.push(element);
@@ -56,6 +53,7 @@ export default function Scheduler(props: IProps) {
         if (a.end > b.end) return 1;
         else return -1;
       });
+      console.log(tempData);
       setDataArr(tempData);
     }
   };
@@ -118,10 +116,7 @@ export default function Scheduler(props: IProps) {
             setCalendar((prev) => (prev ? false : true));
           }}
         />
-        <div
-          className="calendarArea"
-          style={calendar ? { height: "262px" } : { height: "0px" }}
-        >
+        <div className="calendarArea" style={calendar ? { height: "262px" } : { height: "0px" }}>
           <Calendar
             locale="en"
             calendarType="US"
@@ -142,6 +137,8 @@ export default function Scheduler(props: IProps) {
               <p className="dateSeparator">
                 {element.end === "0000"
                   ? "No Date"
+                  : element.end === "overdue"
+                  ? "Overdue"
                   : moment(element.end).format("YYYY/MM/DD")}
               </p>
               {element.data.map((data) => {
@@ -160,12 +157,7 @@ export default function Scheduler(props: IProps) {
         })}
       </div>
       {undo ? (
-        <UndoBtn
-          undo={undo}
-          setUndo={setUndo}
-          refreshData={refreshData}
-          DB={props.DB}
-        />
+        <UndoBtn undo={undo} setUndo={setUndo} refreshData={refreshData} DB={props.DB} />
       ) : null}
     </>
   );

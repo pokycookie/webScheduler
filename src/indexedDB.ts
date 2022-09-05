@@ -17,24 +17,27 @@ export default class IndexedDB {
         const IDB = request.result;
 
         if (e.oldVersion < 1) {
-          const objectStore = IDB.createObjectStore("todo", {
+          const todoStore = IDB.createObjectStore("todo", {
             keyPath: "_id",
             autoIncrement: true,
           });
-          objectStore.createIndex("indexByContent", "content");
-          objectStore.createIndex("indexByUpdated", "updated");
-          objectStore.createIndex("indexByStart", "start");
-          objectStore.createIndex("indexByEnd", "end");
+          todoStore.createIndex("indexByContent", "content");
+          todoStore.createIndex("indexByUpdated", "updated");
+          todoStore.createIndex("indexByStart", "start");
+          todoStore.createIndex("indexByEnd", "end");
+        }
+        if (e.oldVersion < 2) {
+          const deletedStore = IDB.createObjectStore("deleted", {
+            keyPath: "_id",
+            autoIncrement: true,
+          });
+          deletedStore.createIndex("updated", "updated");
         }
       };
     });
   }
 
-  static create(
-    DB: IDBDatabase,
-    store: string,
-    data: {}
-  ): Promise<IDBValidKey> {
+  static create(DB: IDBDatabase, store: string, data: {}): Promise<IDBValidKey> {
     // Open transaction
     const transaction = DB.transaction(store, "readwrite");
 
@@ -52,11 +55,7 @@ export default class IndexedDB {
     });
   }
 
-  static read(
-    DB: IDBDatabase,
-    store: string,
-    query: IDBValidKey | IDBKeyRange
-  ): Promise<any> {
+  static read(DB: IDBDatabase, store: string, query: IDBValidKey | IDBKeyRange): Promise<any> {
     // Open transaction
     const transaction = DB.transaction(store, "readonly");
 
@@ -122,11 +121,7 @@ export default class IndexedDB {
     });
   }
 
-  static delete(
-    DB: IDBDatabase,
-    store: string,
-    query: IDBValidKey | IDBKeyRange
-  ): Promise<any> {
+  static delete(DB: IDBDatabase, store: string, query: IDBValidKey | IDBKeyRange): Promise<any> {
     // Open transaction
     const transaction = DB.transaction(store, "readwrite");
 
