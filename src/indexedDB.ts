@@ -27,7 +27,7 @@ export default class IndexedDB {
           todoStore.createIndex("indexByEnd", "end");
         }
         if (e.oldVersion < 2) {
-          const deletedStore = IDB.createObjectStore("deleted", {
+          const deletedStore = IDB.createObjectStore("checked", {
             keyPath: "_id",
             autoIncrement: true,
           });
@@ -55,7 +55,7 @@ export default class IndexedDB {
     });
   }
 
-  static read(DB: IDBDatabase, store: string, query: IDBValidKey | IDBKeyRange): Promise<any> {
+  static read<T>(DB: IDBDatabase, store: string, query: IDBValidKey | IDBKeyRange): Promise<T> {
     // Open transaction
     const transaction = DB.transaction(store, "readonly");
 

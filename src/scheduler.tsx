@@ -35,17 +35,28 @@ export default function Scheduler(props: IProps) {
       const tempData: ISortedData[] = [];
       const endArr: string[] = [];
 
-      IDB.forEach((element) => {
+      IDB.forEach(async (element) => {
         let key = element.end ? element.end.toISOString() : "0000";
         const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
-        if (key !== "0000" && new Date(key) <= current) key = "overdue";
-        const index = endArr.findIndex((E) => E === key);
 
+        // Overdue
+        if (key !== "0000" && new Date(key) <= current) {
+          key = "0001";
+          // When checked, delete data in todo DB
+          if (element.checked && props.DB && element._id) {
+            console.log(element);
+            await IndexedDB.delete(props.DB, "todo", element._id);
+          }
+        }
+
+        const index = endArr.findIndex((E) => E === key);
         if (index === -1) {
+          // No exist in endArr
           tempData.push({ end: key, data: [] });
           tempData[tempData.length - 1].data.push(element);
           endArr.push(key);
         } else {
+          // Exist in endArr
           tempData[index].data.push(element);
         }
       });
@@ -137,7 +148,7 @@ export default function Scheduler(props: IProps) {
               <p className="dateSeparator">
                 {element.end === "0000"
                   ? "No Date"
-                  : element.end === "overdue"
+                  : element.end === "0001"
                   ? "Overdue"
                   : moment(element.end).format("YYYY/MM/DD")}
               </p>
