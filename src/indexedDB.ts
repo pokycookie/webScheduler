@@ -27,7 +27,7 @@ export default class IndexedDB {
           todoStore.createIndex("indexByEnd", "end");
         }
         if (e.oldVersion < 2) {
-          const deletedStore = IDB.createObjectStore("checked", {
+          const deletedStore = IDB.createObjectStore("completed", {
             keyPath: "_id",
             autoIncrement: true,
           });

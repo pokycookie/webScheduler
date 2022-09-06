@@ -29,6 +29,24 @@ export default function Scheduler(props: IProps) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const completedData = async () => {
+    if (props.DB) {
+      const IDB = await IndexedDB.readAll(props.DB, "todo");
+      const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
+
+      IDB.forEach(async (element) => {
+        // Select No Date & Overdue
+        if ((element.end && new Date(element.end) <= current) || element.end === undefined) {
+          // Select checked data
+          if (element.checked && props.DB && element._id) {
+            await IndexedDB.delete(props.DB, "todo", element._id);
+            refreshData();
+          }
+        }
+      });
+    }
+  };
+
   const refreshData = async () => {
     if (props.DB) {
       const IDB = await IndexedDB.readAll(props.DB, "todo");
@@ -40,14 +58,7 @@ export default function Scheduler(props: IProps) {
         const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
 
         // Overdue
-        if (key !== "0000" && new Date(key) <= current) {
-          key = "0001";
-          // When checked, delete data in todo DB
-          if (element.checked && props.DB && element._id) {
-            console.log(element);
-            await IndexedDB.delete(props.DB, "todo", element._id);
-          }
-        }
+        if (key !== "0000" && new Date(key) <= current) key = "0001";
 
         const index = endArr.findIndex((E) => E === key);
         if (index === -1) {
@@ -95,6 +106,7 @@ export default function Scheduler(props: IProps) {
   // Initailize
   useEffect(() => {
     refreshData();
+    completedData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.DB]);
 
