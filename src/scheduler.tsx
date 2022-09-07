@@ -31,19 +31,23 @@ export default function Scheduler(props: IProps) {
 
   const completedData = async () => {
     if (props.DB) {
+      console.log("complete");
       const IDB = await IndexedDB.readAll(props.DB, "todo");
       const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
-
       IDB.forEach(async (element) => {
         // Select No Date & Overdue
         if ((element.end && new Date(element.end) <= current) || element.end === undefined) {
           // Select checked data
           if (element.checked && props.DB && element._id) {
+            const tempData: IData = { ...element };
+            delete tempData._id;
             await IndexedDB.delete(props.DB, "todo", element._id);
-            refreshData();
+            // 중복문제 해결 필요
+            await IndexedDB.create(props.DB, "completed", tempData);
           }
         }
       });
+      refreshData();
     }
   };
 
@@ -75,7 +79,6 @@ export default function Scheduler(props: IProps) {
         if (a.end > b.end) return 1;
         else return -1;
       });
-      console.log(tempData);
       setDataArr(tempData);
     }
   };
@@ -105,8 +108,8 @@ export default function Scheduler(props: IProps) {
 
   // Initailize
   useEffect(() => {
-    refreshData();
     completedData();
+    refreshData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.DB]);
 
