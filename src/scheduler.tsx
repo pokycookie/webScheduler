@@ -39,11 +39,11 @@ export default function Scheduler(props: IProps) {
         if ((element.end && new Date(element.end) <= current) || element.end === undefined) {
           // Select checked data
           if (element.checked && props.DB && element._id) {
-            const tempData: IData = { ...element };
-            delete tempData._id;
-            await IndexedDB.delete(props.DB, "todo", element._id);
-            // 중복문제 해결 필요
-            await IndexedDB.create(props.DB, "completed", tempData);
+            // const tempData: IData = { ...element };
+            // delete tempData._id;
+            // await IndexedDB.delete(props.DB, "todo", element._id);
+            // await IndexedDB.create(props.DB, "completed", tempData);
+            await IndexedDB.move(props.DB, "todo", "completed", element._id);
           }
         }
       });

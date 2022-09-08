@@ -139,6 +139,45 @@ export default class IndexedDB {
     });
   }
 
+  static move<T>(
+    DB: IDBDatabase,
+    store1: string,
+    store2: string,
+    query: IDBValidKey | IDBKeyRange
+  ) {
+    const transaction1 = DB.transaction(store1, "readwrite");
+
+    return new Promise((resolve, rejects) => {
+      const objectStore1 = transaction1.objectStore(store1);
+      const data = objectStore1.get(query);
+      const removeReq = objectStore1.delete(query);
+
+      data.onsuccess = () => {
+        removeReq.onsuccess = () => {
+          const transaction2 = DB.transaction(store2, "readwrite");
+          const objectStore2 = transaction2.objectStore(store2);
+
+          if (data.result) {
+            const createReq = objectStore2.add(data.result);
+
+            createReq.onsuccess = () => {
+              resolve(createReq.result);
+            };
+            createReq.onerror = () => {
+              rejects(createReq.error);
+            };
+          }
+        };
+        removeReq.onerror = () => {
+          rejects(removeReq.error);
+        };
+      };
+      data.onerror = () => {
+        rejects(data.error);
+      };
+    });
+  }
+
   static readAll(DB: IDBDatabase, store: string): Promise<IData[]> {
     // Open transaction
     const transaction = DB.transaction(store, "readonly");
