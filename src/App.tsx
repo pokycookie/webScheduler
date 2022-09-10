@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
+import Additional from "./components/additional";
 import IndexedDB from "./indexedDB";
 import Scheduler from "./scheduler";
 import "./styles/App.scss";
 
 function App() {
-  // Turn on or off extension
-  const [power, setPower] = useState<boolean>(true);
   const [IDB, setIDB] = useState<IDBDatabase>();
 
   // Open DB
@@ -24,7 +23,8 @@ function App() {
 
   return (
     <div className="webScheduler">
-      <Scheduler power={power} setPower={setPower} DB={IDB} />
+      <Scheduler DB={IDB} />
+      <Additional DB={IDB} />
     </div>
   );
 }

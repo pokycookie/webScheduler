@@ -139,12 +139,7 @@ export default class IndexedDB {
     });
   }
 
-  static move<T>(
-    DB: IDBDatabase,
-    store1: string,
-    store2: string,
-    query: IDBValidKey | IDBKeyRange
-  ) {
+  static move(DB: IDBDatabase, store1: string, store2: string, query: IDBValidKey | IDBKeyRange) {
     const transaction1 = DB.transaction(store1, "readwrite");
 
     return new Promise((resolve, rejects) => {

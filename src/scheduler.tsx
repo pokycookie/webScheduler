@@ -1,7 +1,7 @@
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
 import TodoList from "./components/todoList";
 import UndoBtn from "./components/undoBtn";
@@ -9,8 +9,6 @@ import IndexedDB from "./indexedDB";
 import { IData } from "./type";
 
 interface IProps {
-  power: boolean;
-  setPower: Dispatch<SetStateAction<boolean>>;
   DB?: IDBDatabase;
 }
 
@@ -31,20 +29,14 @@ export default function Scheduler(props: IProps) {
 
   const completedData = async () => {
     if (props.DB) {
-      console.log("complete");
       const IDB = await IndexedDB.readAll(props.DB, "todo");
       const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
       IDB.forEach(async (element) => {
         // Select No Date & Overdue
         if ((element.end && new Date(element.end) <= current) || element.end === undefined) {
           // Select checked data
-          if (element.checked && props.DB && element._id) {
-            // const tempData: IData = { ...element };
-            // delete tempData._id;
-            // await IndexedDB.delete(props.DB, "todo", element._id);
-            // await IndexedDB.create(props.DB, "completed", tempData);
+          if (element.checked && props.DB && element._id)
             await IndexedDB.move(props.DB, "todo", "completed", element._id);
-          }
         }
       });
       refreshData();
@@ -83,10 +75,6 @@ export default function Scheduler(props: IProps) {
     }
   };
 
-  const powerBtnHandler = () => {
-    props.setPower((prev) => (prev ? false : true));
-  };
-
   const submit = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       if (e.shiftKey === true) {
@@ -115,10 +103,6 @@ export default function Scheduler(props: IProps) {
 
   return (
     <>
-      {/* <button className="powerBtn" onClick={powerBtnHandler}></button> */}
-      {/* <header>
-        <FontAwesomeIcon className="menu" icon={faBars} />
-      </header> */}
       <div className="mainInputArea">
         <input
           className="mainInput"
