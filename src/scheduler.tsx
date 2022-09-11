@@ -29,7 +29,7 @@ export default function Scheduler(props: IProps) {
 
   const completedData = async () => {
     if (props.DB) {
-      const IDB = await IndexedDB.readAll(props.DB, "todo");
+      const IDB = await IndexedDB.readAll<IData>(props.DB, "todo");
       const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
       IDB.forEach(async (element) => {
         // Select No Date & Overdue
@@ -45,7 +45,7 @@ export default function Scheduler(props: IProps) {
 
   const refreshData = async () => {
     if (props.DB) {
-      const IDB = await IndexedDB.readAll(props.DB, "todo");
+      const IDB = await IndexedDB.readAll<IData>(props.DB, "todo");
       const tempData: ISortedData[] = [];
       const endArr: string[] = [];
 
@@ -98,6 +98,10 @@ export default function Scheduler(props: IProps) {
   useEffect(() => {
     completedData();
     refreshData();
+
+    return () => {
+      completedData();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.DB]);
 

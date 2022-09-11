@@ -173,7 +173,7 @@ export default class IndexedDB {
     });
   }
 
-  static readAll(DB: IDBDatabase, store: string): Promise<IData[]> {
+  static readAll<T>(DB: IDBDatabase, store: string): Promise<T[]> {
     // Open transaction
     const transaction = DB.transaction(store, "readonly");
 
@@ -181,7 +181,7 @@ export default class IndexedDB {
     return new Promise((resolve, rejects) => {
       const objectStore = transaction.objectStore(store);
       const request = objectStore.openCursor();
-      const result: any[] = [];
+      const result: T[] = [];
 
       request.onerror = () => {
         rejects(request.error);
