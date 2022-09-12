@@ -7,6 +7,7 @@ import { IData } from "../type";
 
 interface IProps {
   DB?: IDBDatabase;
+  refresh: () => Promise<void>;
 }
 
 export default function Additional(props: IProps) {
@@ -22,7 +23,7 @@ export default function Additional(props: IProps) {
       await IndexedDB.delete(props.DB, "completed", key);
       const tempArr = await IndexedDB.readAll<IData>(props.DB, "completed");
       setCompletedArr(tempArr);
-      // needed refresh
+      await props.refresh();
     }
   };
 
@@ -34,6 +35,7 @@ export default function Additional(props: IProps) {
       await IndexedDB.move(props.DB, "completed", "todo", data._id);
       const tempArr = await IndexedDB.readAll<IData>(props.DB, "completed");
       setCompletedArr(tempArr);
+      await props.refresh();
     }
   };
 
@@ -44,7 +46,7 @@ export default function Additional(props: IProps) {
       setCompletedArr(result);
     };
     if (props.DB) getDB(props.DB);
-  }, [props.DB]);
+  }, [props.DB, power]);
 
   return (
     <div className={`additionalArea${power ? " on" : ""}`}>

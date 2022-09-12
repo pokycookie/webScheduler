@@ -10,6 +10,8 @@ import { IData } from "./type";
 
 interface IProps {
   DB?: IDBDatabase;
+  dataArr: ISortedData[];
+  refresh: () => Promise<void>;
 }
 
 interface ISortedData {
@@ -19,7 +21,6 @@ interface ISortedData {
 
 export default function Scheduler(props: IProps) {
   const [inputStr, setInputStr] = useState<string>("");
-  const [dataArr, setDataArr] = useState<ISortedData[]>([]);
   const [inputFocus, setInputFocus] = useState<boolean>(false);
   const [calendar, setCalendar] = useState<boolean>(false);
   const [optionDate, setOptionDate] = useState(new Date());
@@ -39,41 +40,41 @@ export default function Scheduler(props: IProps) {
             await IndexedDB.move(props.DB, "todo", "completed", element._id);
         }
       });
-      refreshData();
+      props.refresh();
     }
   };
 
-  const refreshData = async () => {
-    if (props.DB) {
-      const IDB = await IndexedDB.readAll<IData>(props.DB, "todo");
-      const tempData: ISortedData[] = [];
-      const endArr: string[] = [];
+  // const refreshData = async () => {
+  //   if (props.DB) {
+  //     const IDB = await IndexedDB.readAll<IData>(props.DB, "todo");
+  //     const tempData: ISortedData[] = [];
+  //     const endArr: string[] = [];
 
-      IDB.forEach(async (element) => {
-        let key = element.end ? element.end.toISOString() : "0000";
-        const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
+  //     IDB.forEach(async (element) => {
+  //       let key = element.end ? element.end.toISOString() : "0000";
+  //       const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
 
-        // Overdue
-        if (key !== "0000" && new Date(key) <= current) key = "0001";
+  //       // Overdue
+  //       if (key !== "0000" && new Date(key) <= current) key = "0001";
 
-        const index = endArr.findIndex((E) => E === key);
-        if (index === -1) {
-          // No exist in endArr
-          tempData.push({ end: key, data: [] });
-          tempData[tempData.length - 1].data.push(element);
-          endArr.push(key);
-        } else {
-          // Exist in endArr
-          tempData[index].data.push(element);
-        }
-      });
-      tempData.sort((a, b) => {
-        if (a.end > b.end) return 1;
-        else return -1;
-      });
-      setDataArr(tempData);
-    }
-  };
+  //       const index = endArr.findIndex((E) => E === key);
+  //       if (index === -1) {
+  //         // No exist in endArr
+  //         tempData.push({ end: key, data: [] });
+  //         tempData[tempData.length - 1].data.push(element);
+  //         endArr.push(key);
+  //       } else {
+  //         // Exist in endArr
+  //         tempData[index].data.push(element);
+  //       }
+  //     });
+  //     tempData.sort((a, b) => {
+  //       if (a.end > b.end) return 1;
+  //       else return -1;
+  //     });
+  //     setDataArr(tempData);
+  //   }
+  // };
 
   const submit = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -89,7 +90,7 @@ export default function Scheduler(props: IProps) {
         await IndexedDB.create(props.DB, "todo", data);
         setCalendar(false);
         setInputStr("");
-        await refreshData();
+        await props.refresh();
       }
     }
   };
@@ -97,7 +98,7 @@ export default function Scheduler(props: IProps) {
   // Initailize
   useEffect(() => {
     completedData();
-    refreshData();
+    props.refresh();
 
     return () => {
       completedData();
@@ -145,7 +146,7 @@ export default function Scheduler(props: IProps) {
         </div>
       </div>
       <div className="todoListArea">
-        {dataArr.map((element, index) => {
+        {props.dataArr.map((element, index) => {
           return (
             <div key={index}>
               <p className="dateSeparator">
@@ -161,7 +162,7 @@ export default function Scheduler(props: IProps) {
                     key={data._id}
                     data={data}
                     DB={props.DB}
-                    refreshData={refreshData}
+                    refreshData={props.refresh}
                     setUndo={setUndo}
                   />
                 );
@@ -171,7 +172,7 @@ export default function Scheduler(props: IProps) {
         })}
       </div>
       {undo ? (
-        <UndoBtn undo={undo} setUndo={setUndo} refreshData={refreshData} DB={props.DB} />
+        <UndoBtn undo={undo} setUndo={setUndo} refreshData={props.refresh} DB={props.DB} />
       ) : null}
     </>
   );
