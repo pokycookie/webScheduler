@@ -6,12 +6,13 @@ import Calendar from "react-calendar";
 import TodoList from "./components/todoList";
 import UndoBtn from "./components/undoBtn";
 import IndexedDB from "./indexedDB";
-import { IData } from "./type";
+import { IColor, IData } from "./type";
 
 interface IProps {
   DB?: IDBDatabase;
   dataArr: ISortedData[];
   refresh: () => Promise<void>;
+  color: IColor;
 }
 
 interface ISortedData {
@@ -43,38 +44,6 @@ export default function Scheduler(props: IProps) {
       props.refresh();
     }
   };
-
-  // const refreshData = async () => {
-  //   if (props.DB) {
-  //     const IDB = await IndexedDB.readAll<IData>(props.DB, "todo");
-  //     const tempData: ISortedData[] = [];
-  //     const endArr: string[] = [];
-
-  //     IDB.forEach(async (element) => {
-  //       let key = element.end ? element.end.toISOString() : "0000";
-  //       const current = new Date(moment(new Date()).subtract(1, "d").endOf("date").toISOString());
-
-  //       // Overdue
-  //       if (key !== "0000" && new Date(key) <= current) key = "0001";
-
-  //       const index = endArr.findIndex((E) => E === key);
-  //       if (index === -1) {
-  //         // No exist in endArr
-  //         tempData.push({ end: key, data: [] });
-  //         tempData[tempData.length - 1].data.push(element);
-  //         endArr.push(key);
-  //       } else {
-  //         // Exist in endArr
-  //         tempData[index].data.push(element);
-  //       }
-  //     });
-  //     tempData.sort((a, b) => {
-  //       if (a.end > b.end) return 1;
-  //       else return -1;
-  //     });
-  //     setDataArr(tempData);
-  //   }
-  // };
 
   const submit = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -119,6 +88,7 @@ export default function Scheduler(props: IProps) {
           onFocus={() => setInputFocus(true)}
           onBlur={() => setInputFocus(false)}
           ref={inputRef}
+          style={{ backgroundColor: props.color.lightest }}
         />
         <FontAwesomeIcon
           className="calendar"
@@ -145,7 +115,7 @@ export default function Scheduler(props: IProps) {
           />
         </div>
       </div>
-      <div className="todoListArea">
+      <div className="todoListArea" style={{ backgroundColor: props.color.lighter }}>
         {props.dataArr.map((element, index) => {
           return (
             <div key={index}>

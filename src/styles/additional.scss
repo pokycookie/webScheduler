@@ -21,14 +21,14 @@
     border: none;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    background-color: rgba($color: #a66cff, $alpha: 0.3);
+    opacity: 0.3;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
     box-sizing: border-box;
     padding: 0px;
 
     &:hover {
-      background-color: rgba($color: #a66cff, $alpha: 1);
+      opacity: 1;
     }
   }
 
@@ -52,26 +52,21 @@
       border-radius: 10px;
       margin-bottom: 10px;
       box-sizing: border-box;
-      padding: 0px 10px;
+      padding: 0px 5px;
       display: flex;
       justify-content: space-around;
       align-items: center;
 
       button {
         width: 100%;
-        height: 23px;
+        height: 24px;
         background-color: rgba($color: #000000, $alpha: 0);
-        border-radius: 5px;
+        border-radius: 10px;
         border: none;
         font-family: "Noto Sans KR", "Karla", sans-serif;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.5s ease-in-out;
-
-        &.selected {
-          background-color: #a66cff;
-          color: white;
-        }
       }
     }
 
@@ -86,12 +81,25 @@
       overflow-y: auto;
 
       &::-webkit-scrollbar {
-        width: 5px;
+        width: 0px;
       }
       &::-webkit-scrollbar-thumb {
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         background-color: #e0cbff;
+      }
+
+      .settingArea {
+        margin-top: 10px;
+        font-family: "Noto Sans KR", "Karla", sans-serif;
+        font-weight: 600;
+        font-size: 13px;
+
+        .color {
+          p {
+            margin-bottom: 10px;
+          }
+        }
       }
 
       .completedList {

@@ -51,17 +51,33 @@ function App() {
     }
   };
 
+  // Setting
+  useEffect(() => {
+    const setting = async () => {
+      if (IDB) {
+        const colorSetting = await IndexedDB.findSetting<IColor>(IDB, "color");
+        setColorObj(colorSetting);
+      }
+    };
+    setting();
+  }, [IDB]);
+
   // Set colorObj
   useEffect(() => {
     const colorObj = getColorObj(hue);
     setColorObj(colorObj);
+
+    const updateDB = async () => {
+      if (IDB) await IndexedDB.updateSetting<IColor>(IDB, "color", colorObj);
+    };
+    updateDB();
   }, [hue]);
 
   // Open DB
   useEffect(() => {
     const openDB = async () => {
       try {
-        const DB = await IndexedDB.open("CWS", 2);
+        const DB = await IndexedDB.open("CWS", 3);
         setIDB(DB);
       } catch (err) {
         console.error(err);
@@ -71,53 +87,10 @@ function App() {
     openDB();
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("wheel", (e) => {
-      if (e.deltaY < 0) {
-        setHue((prev) => prev + 5);
-      } else {
-        setHue((prev) => prev - 5);
-      }
-    });
-  }, []);
-
   return (
-    <div className="webScheduler">
-      {/* <div
-        className="color"
-        style={{ position: "absolute", display: "flex", right: "0px", bottom: "0px", zIndex: "1" }}
-      >
-        <div
-          className="element"
-          style={{ width: "30px", height: "30px", backgroundColor: `${colorObj?.darkest}` }}
-        ></div>
-        <div
-          className="element"
-          style={{ width: "30px", height: "30px", backgroundColor: `${colorObj?.darker}` }}
-        ></div>
-        <div
-          className="element"
-          style={{ width: "30px", height: "30px", backgroundColor: `${colorObj?.dark}` }}
-        ></div>
-        <div
-          className="element"
-          style={{ width: "30px", height: "30px", backgroundColor: `${colorObj?.normal}` }}
-        ></div>
-        <div
-          className="element"
-          style={{ width: "30px", height: "30px", backgroundColor: `${colorObj?.light}` }}
-        ></div>
-        <div
-          className="element"
-          style={{ width: "30px", height: "30px", backgroundColor: `${colorObj?.lighter}` }}
-        ></div>
-        <div
-          className="element"
-          style={{ width: "30px", height: "30px", backgroundColor: `${colorObj?.lightest}` }}
-        ></div>
-      </div> */}
-      <Scheduler DB={IDB} dataArr={dataArr} refresh={refreshData} />
-      <Additional DB={IDB} refresh={refreshData} />
+    <div className="webScheduler" style={{ backgroundColor: colorObj.normal }}>
+      <Scheduler DB={IDB} dataArr={dataArr} refresh={refreshData} color={colorObj} />
+      <Additional DB={IDB} refresh={refreshData} setting={{ setHue }} color={colorObj} />
     </div>
   );
 }

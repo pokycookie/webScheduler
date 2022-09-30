@@ -1,0 +1,39 @@
+.hslSelector {
+  width: 100%;
+  height: 30px;
+  box-sizing: border-box;
+
+  .rainbow {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      hsl(0, 100%, 65%) 0%,
+      hsl(36, 100%, 65%) 10%,
+      hsl(72, 100%, 65%) 20%,
+      hsl(108, 100%, 65%) 30%,
+      hsl(144, 100%, 65%) 40%,
+      hsl(180, 100%, 65%) 50%,
+      hsl(216, 100%, 65%) 60%,
+      hsl(252, 100%, 65%) 70%,
+      hsl(288, 100%, 65%) 80%,
+      hsl(324, 100%, 65%) 90%,
+      hsl(360, 100%, 65%) 100%
+    );
+    overflow: hidden;
+
+    .selector {
+      width: 14px;
+      height: 100%;
+      border: 2px solid white;
+      border-radius: 10px;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0px;
+      pointer-events: none;
+      transition: left 0.3s ease-in-out;
+    }
+  }
+}

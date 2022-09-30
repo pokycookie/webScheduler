@@ -33,6 +33,13 @@ export default class IndexedDB {
           });
           deletedStore.createIndex("updated", "updated");
         }
+        if (e.oldVersion < 3) {
+          const settingStore = IDB.createObjectStore("setting", {
+            keyPath: "_id",
+            autoIncrement: true,
+          });
+          settingStore.createIndex("key", "key");
+        }
       };
     });
   }
@@ -169,6 +176,62 @@ export default class IndexedDB {
       };
       data.onerror = () => {
         rejects(data.error);
+      };
+    });
+  }
+
+  static findSetting<T>(DB: IDBDatabase, key: string): Promise<T> {
+    const transaction = DB.transaction("setting", "readonly");
+
+    return new Promise((resolve, rejects) => {
+      const objectStore = transaction.objectStore("setting");
+      const index = objectStore.index("key");
+      const request = index.get(key);
+
+      request.onerror = () => {
+        rejects(request.error);
+      };
+      request.onsuccess = () => {
+        resolve(request.result.value);
+      };
+    });
+  }
+
+  static updateSetting<T>(DB: IDBDatabase, key: string, value: T) {
+    const transaction = DB.transaction("setting", "readwrite");
+
+    return new Promise((resolve, rejects) => {
+      const objectStore = transaction.objectStore("setting");
+      const index = objectStore.index("key");
+      const request = index.get(key);
+
+      request.onerror = () => {
+        rejects(request.error);
+      };
+      request.onsuccess = (e) => {
+        if (request.result) {
+          // Update key
+          const updated = request.result;
+          updated.value = value;
+          const updateReq = objectStore.put(updated);
+
+          updateReq.onerror = () => {
+            rejects(updateReq.error);
+          };
+          updateReq.onsuccess = () => {
+            resolve(updateReq.result);
+          };
+        } else {
+          // Create new key
+          const createReq = objectStore.add({ key, value });
+
+          createReq.onerror = () => {
+            rejects(createReq.error);
+          };
+          createReq.onsuccess = () => {
+            resolve(createReq.result);
+          };
+        }
       };
     });
   }
