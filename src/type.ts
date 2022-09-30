@@ -14,3 +14,13 @@ export interface IUpdateOptions {
   start?: Date;
   end?: Date;
 }
+
+export interface IColor {
+  darkest: string;
+  darker: string;
+  dark: string;
+  normal: string;
+  light: string;
+  lighter: string;
+  lightest: string;
+}

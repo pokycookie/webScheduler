@@ -10,9 +10,12 @@ interface IProps {
   refresh: () => Promise<void>;
 }
 
+type TMenu = "completed" | "setting";
+
 export default function Additional(props: IProps) {
   const [power, setPower] = useState<boolean>(false);
   const [completedArr, setCompletedArr] = useState<IData[]>([]);
+  const [menu, setMenu] = useState<TMenu>("completed");
 
   const powerBtnHandler = () => {
     setPower((prev) => (prev ? false : true));
@@ -51,31 +54,53 @@ export default function Additional(props: IProps) {
   return (
     <div className={`additionalArea${power ? " on" : ""}`}>
       <button className="powerBtn" onClick={powerBtnHandler}></button>
-      <div className="contentArea">
-        <div className="completedListArea">
-          {completedArr.map((element) => {
-            return (
-              <li className="completedList" key={element._id}>
-                <p>{element.content}</p>
-                <div className="iconArea">
-                  <FontAwesomeIcon
-                    className="icon rotate"
-                    icon={faRotateLeft}
-                    onClick={() => {
-                      restoreData(element);
-                    }}
-                  />
-                  <FontAwesomeIcon
-                    className="icon trash"
-                    icon={faTrashCan}
-                    onClick={() => {
-                      deleteData(element._id);
-                    }}
-                  />
-                </div>
-              </li>
-            );
-          })}
+      <div className="mainArea">
+        <div className="menuArea">
+          <button
+            className={menu === "completed" ? "selected" : ""}
+            onClick={() => {
+              setMenu("completed");
+            }}
+          >
+            Completed
+          </button>
+          <button
+            className={menu === "setting" ? "selected" : ""}
+            onClick={() => {
+              setMenu("setting");
+            }}
+          >
+            Setting
+          </button>
+        </div>
+        <div className="contentArea">
+          {menu === "completed" ? (
+            <div className="completedListArea">
+              {completedArr.map((element) => {
+                return (
+                  <li className="completedList" key={element._id}>
+                    <p>{element.content}</p>
+                    <div className="iconArea">
+                      <FontAwesomeIcon
+                        className="icon rotate"
+                        icon={faRotateLeft}
+                        onClick={() => {
+                          restoreData(element);
+                        }}
+                      />
+                      <FontAwesomeIcon
+                        className="icon trash"
+                        icon={faTrashCan}
+                        onClick={() => {
+                          deleteData(element._id);
+                        }}
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

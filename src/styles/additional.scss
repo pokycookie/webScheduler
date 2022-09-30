@@ -32,7 +32,7 @@
     }
   }
 
-  .contentArea {
+  .mainArea {
     width: 100%;
     height: 400px;
     background-color: #a66cff;
@@ -42,13 +42,43 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 
-    .completedListArea {
-      background-color: #d2b5ff;
+    .menuArea {
       width: 100%;
-      height: 360px;
+      height: 30px;
+      background-color: #d2b5ff;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      padding: 0px 10px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      button {
+        width: 100%;
+        height: 23px;
+        background-color: rgba($color: #000000, $alpha: 0);
+        border-radius: 5px;
+        border: none;
+        font-family: "Noto Sans KR", "Karla", sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.5s ease-in-out;
+
+        &.selected {
+          background-color: #a66cff;
+          color: white;
+        }
+      }
+    }
+
+    .contentArea {
+      background-color: #d2b5ff;
+      width: 330px;
+      height: 320px;
       padding: 0px 10px 10px 10px;
       box-sizing: border-box;
       border-radius: 10px;
