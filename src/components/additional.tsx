@@ -1,16 +1,13 @@
 import { faRotateLeft, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import IndexedDB from "../indexedDB";
-import { IReduxStore } from "../redux";
+import { getColorObj } from "../lib";
+import { IReduxStore, RSetColor } from "../redux";
 import "../styles/additional.scss";
 import { IColor, IData } from "../type";
 import HslSelector from "./hslSelector";
-
-interface ISetting {
-  setHue: React.Dispatch<React.SetStateAction<number>>;
-}
 
 interface IProps {
   DB?: IDBDatabase;
@@ -24,12 +21,19 @@ export default function Additional(props: IProps) {
   const [completedArr, setCompletedArr] = useState<IData[]>([]);
   const [menu, setMenu] = useState<TMenu>("completed");
 
+  const dispatch = useDispatch();
   const colorObj = useSelector<IReduxStore, IColor>((state) => {
     return state.color;
   }, shallowEqual);
 
   const powerBtnHandler = () => {
     setPower((prev) => (prev ? false : true));
+  };
+
+  const colorHandler = async (hue: number) => {
+    const color = getColorObj(hue);
+    dispatch(RSetColor(color));
+    if (props.DB) await IndexedDB.updateSetting<IColor>(props.DB, "color", color);
   };
 
   const deleteData = async (key: any) => {
@@ -126,7 +130,10 @@ export default function Additional(props: IProps) {
             <div className="settingArea">
               <div className="color">
                 <p>Color Theme</p>
-                {/* <HslSelector onChange={(hue) => props.setting.setHue(hue)} /> */}
+                <HslSelector
+                  onChange={(hue) => colorHandler(hue)}
+                  default={getHueFromColorObj(colorObj)}
+                />
               </div>
             </div>
           ) : null}
@@ -135,3 +142,8 @@ export default function Additional(props: IProps) {
     </div>
   );
 }
+
+const getHueFromColorObj = (obj: IColor) => {
+  const string = obj.normal.split(",", 1)[0].slice(4);
+  return parseInt(string);
+};

@@ -1,9 +1,9 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import Additional from "./components/additional";
 import IndexedDB from "./indexedDB";
-import { IReduxStore } from "./redux";
+import { IReduxStore, RSetColor } from "./redux";
 import Scheduler from "./scheduler";
 import "./styles/App.scss";
 import { IColor, IData } from "./type";
@@ -17,6 +17,7 @@ function App() {
   const [IDB, setIDB] = useState<IDBDatabase>();
   const [dataArr, setDataArr] = useState<ISortedData[]>([]);
 
+  const dispatch = useDispatch();
   const colorObj = useSelector<IReduxStore, IColor>((state) => {
     return state.color;
   }, shallowEqual);
@@ -54,16 +55,16 @@ function App() {
     }
   };
 
-  // // Setting
-  // useEffect(() => {
-  //   const setting = async () => {
-  //     if (IDB) {
-  //       const colorSetting = await IndexedDB.findSetting<IColor>(IDB, "color");
-  //       setColorObj(colorSetting);
-  //     }
-  //   };
-  //   setting();
-  // }, [IDB]);
+  // Setting
+  useEffect(() => {
+    const setting = async () => {
+      if (IDB) {
+        const colorSetting = await IndexedDB.findSetting<IColor>(IDB, "color");
+        dispatch(RSetColor(colorSetting));
+      }
+    };
+    setting();
+  }, [IDB]);
 
   // // Set colorObj
   // useEffect(() => {
