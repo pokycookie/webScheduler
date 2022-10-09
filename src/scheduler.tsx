@@ -3,16 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
+import { shallowEqual, useSelector } from "react-redux";
 import TodoList from "./components/todoList";
 import UndoBtn from "./components/undoBtn";
 import IndexedDB from "./indexedDB";
+import { IReduxStore } from "./redux";
 import { IColor, IData } from "./type";
 
 interface IProps {
   DB?: IDBDatabase;
   dataArr: ISortedData[];
   refresh: () => Promise<void>;
-  color: IColor;
 }
 
 interface ISortedData {
@@ -28,6 +29,9 @@ export default function Scheduler(props: IProps) {
   const [undo, setUndo] = useState<IData>();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const colorObj = useSelector<IReduxStore, IColor>((state) => {
+    return state.color;
+  }, shallowEqual);
 
   const completedData = async () => {
     if (props.DB) {
@@ -88,7 +92,7 @@ export default function Scheduler(props: IProps) {
           onFocus={() => setInputFocus(true)}
           onBlur={() => setInputFocus(false)}
           ref={inputRef}
-          style={{ backgroundColor: props.color.lightest }}
+          style={{ backgroundColor: colorObj.lightest }}
         />
         <FontAwesomeIcon
           className="calendar"
@@ -115,7 +119,7 @@ export default function Scheduler(props: IProps) {
           />
         </div>
       </div>
-      <div className="todoListArea" style={{ backgroundColor: props.color.lighter }}>
+      <div className="todoListArea" style={{ backgroundColor: colorObj.lighter }}>
         {props.dataArr.map((element, index) => {
           return (
             <div key={index}>

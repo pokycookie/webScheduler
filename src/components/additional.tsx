@@ -1,7 +1,9 @@
 import { faRotateLeft, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { shallowEqual, useSelector } from "react-redux";
 import IndexedDB from "../indexedDB";
+import { IReduxStore } from "../redux";
 import "../styles/additional.scss";
 import { IColor, IData } from "../type";
 import HslSelector from "./hslSelector";
@@ -13,8 +15,6 @@ interface ISetting {
 interface IProps {
   DB?: IDBDatabase;
   refresh: () => Promise<void>;
-  setting: ISetting;
-  color: IColor;
 }
 
 type TMenu = "completed" | "setting";
@@ -23,6 +23,10 @@ export default function Additional(props: IProps) {
   const [power, setPower] = useState<boolean>(false);
   const [completedArr, setCompletedArr] = useState<IData[]>([]);
   const [menu, setMenu] = useState<TMenu>("completed");
+
+  const colorObj = useSelector<IReduxStore, IColor>((state) => {
+    return state.color;
+  }, shallowEqual);
 
   const powerBtnHandler = () => {
     setPower((prev) => (prev ? false : true));
@@ -63,14 +67,14 @@ export default function Additional(props: IProps) {
       <button
         className="powerBtn"
         onClick={powerBtnHandler}
-        style={{ backgroundColor: props.color.darker }}
+        style={{ backgroundColor: colorObj.darker }}
       ></button>
-      <div className="mainArea" style={{ backgroundColor: props.color.darker }}>
-        <div className="menuArea" style={{ backgroundColor: props.color.light }}>
+      <div className="mainArea" style={{ backgroundColor: colorObj.darker }}>
+        <div className="menuArea" style={{ backgroundColor: colorObj.light }}>
           <button
             style={
               menu === "completed"
-                ? { backgroundColor: props.color.darkest, color: "white" }
+                ? { backgroundColor: colorObj.darkest, color: "white" }
                 : undefined
             }
             onClick={() => {
@@ -81,9 +85,7 @@ export default function Additional(props: IProps) {
           </button>
           <button
             style={
-              menu === "setting"
-                ? { backgroundColor: props.color.darkest, color: "white" }
-                : undefined
+              menu === "setting" ? { backgroundColor: colorObj.darkest, color: "white" } : undefined
             }
             onClick={() => {
               setMenu("setting");
@@ -92,7 +94,7 @@ export default function Additional(props: IProps) {
             Setting
           </button>
         </div>
-        <div className="contentArea" style={{ backgroundColor: props.color.lighter }}>
+        <div className="contentArea" style={{ backgroundColor: colorObj.lighter }}>
           {menu === "completed" ? (
             <div className="completedListArea">
               {completedArr.map((element) => {
@@ -124,7 +126,7 @@ export default function Additional(props: IProps) {
             <div className="settingArea">
               <div className="color">
                 <p>Color Theme</p>
-                <HslSelector onChange={(hue) => props.setting.setHue(hue)} />
+                {/* <HslSelector onChange={(hue) => props.setting.setHue(hue)} /> */}
               </div>
             </div>
           ) : null}

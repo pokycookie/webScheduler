@@ -1,8 +1,9 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { shallowEqual, useSelector } from "react-redux";
 import Additional from "./components/additional";
 import IndexedDB from "./indexedDB";
-import { getColorObj } from "./lib";
+import { IReduxStore } from "./redux";
 import Scheduler from "./scheduler";
 import "./styles/App.scss";
 import { IColor, IData } from "./type";
@@ -15,8 +16,10 @@ interface ISortedData {
 function App() {
   const [IDB, setIDB] = useState<IDBDatabase>();
   const [dataArr, setDataArr] = useState<ISortedData[]>([]);
-  const [hue, setHue] = useState(0);
-  const [colorObj, setColorObj] = useState<IColor>(getColorObj(hue));
+
+  const colorObj = useSelector<IReduxStore, IColor>((state) => {
+    return state.color;
+  }, shallowEqual);
 
   // Refresh data
   const refreshData = async () => {
@@ -51,27 +54,26 @@ function App() {
     }
   };
 
-  // Setting
-  useEffect(() => {
-    const setting = async () => {
-      if (IDB) {
-        const colorSetting = await IndexedDB.findSetting<IColor>(IDB, "color");
-        setColorObj(colorSetting);
-      }
-    };
-    setting();
-  }, [IDB]);
+  // // Setting
+  // useEffect(() => {
+  //   const setting = async () => {
+  //     if (IDB) {
+  //       const colorSetting = await IndexedDB.findSetting<IColor>(IDB, "color");
+  //       setColorObj(colorSetting);
+  //     }
+  //   };
+  //   setting();
+  // }, [IDB]);
 
-  // Set colorObj
-  useEffect(() => {
-    const colorObj = getColorObj(hue);
-    setColorObj(colorObj);
+  // // Set colorObj
+  // useEffect(() => {
+  //   const colorObj = getColorObj(hue);
 
-    const updateDB = async () => {
-      if (IDB) await IndexedDB.updateSetting<IColor>(IDB, "color", colorObj);
-    };
-    updateDB();
-  }, [hue]);
+  //   const updateDB = async () => {
+  //     if (IDB) await IndexedDB.updateSetting<IColor>(IDB, "color", colorObj);
+  //   };
+  //   updateDB();
+  // }, [hue]);
 
   // Open DB
   useEffect(() => {
@@ -89,8 +91,8 @@ function App() {
 
   return (
     <div className="webScheduler" style={{ backgroundColor: colorObj.normal }}>
-      <Scheduler DB={IDB} dataArr={dataArr} refresh={refreshData} color={colorObj} />
-      <Additional DB={IDB} refresh={refreshData} setting={{ setHue }} color={colorObj} />
+      <Scheduler DB={IDB} dataArr={dataArr} refresh={refreshData} />
+      <Additional DB={IDB} refresh={refreshData} />
     </div>
   );
 }
