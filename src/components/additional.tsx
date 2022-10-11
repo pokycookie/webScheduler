@@ -1,5 +1,6 @@
 import { faRotateLeft, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import IndexedDB from "../indexedDB";
@@ -104,7 +105,12 @@ export default function Additional(props: IProps) {
               {completedArr.map((element) => {
                 return (
                   <li className="completedList" key={element._id}>
-                    <p>{element.content}</p>
+                    <div className="elementArea">
+                      <p className="content">{element.content}</p>
+                      <p className="end">
+                        {element.end ? moment(element.end).format("YY.MM.DD") : ""}
+                      </p>
+                    </div>
                     <div className="iconArea">
                       <FontAwesomeIcon
                         className="icon rotate"

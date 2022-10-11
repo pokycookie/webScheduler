@@ -114,11 +114,24 @@
         color: #343a40;
         font-family: "Noto Sans KR", "Karla", sans-serif;
 
-        p {
-          width: 250px;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+        .elementArea {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+
+          .content {
+            width: 210px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .end {
+            width: 40px;
+            font-size: 10px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+          }
         }
 
         .icon {
