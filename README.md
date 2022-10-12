@@ -8,8 +8,10 @@
 - [x] Font family
 - [x] Checkbox
 - [ ] Repeat Todo
-- [ ] Color theme option
+- [x] Color theme option
 - [ ] Language option
 - [x] Undo
 - [x] Overdue list
-- [ ] Seperate completed list
+- [x] Seperate completed list
+- [x] Setting
+- [x] Redux
