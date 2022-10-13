@@ -7,7 +7,7 @@ import IndexedDB from "../indexedDB";
 import { getColorObj } from "../lib";
 import { IReduxStore, RSetColor } from "../redux";
 import "../styles/additional.scss";
-import { IColor, IData } from "../type";
+import { IColor, IData, IHSL } from "../type";
 import HslSelector from "./hslSelector";
 
 interface IProps {
@@ -21,9 +21,10 @@ export default function Additional(props: IProps) {
   const [power, setPower] = useState<boolean>(false);
   const [completedArr, setCompletedArr] = useState<IData[]>([]);
   const [menu, setMenu] = useState<TMenu>("completed");
+  const [colorObj, setColorObj] = useState<IColor>(getColorObj(0, 100, 65));
 
   const dispatch = useDispatch();
-  const colorObj = useSelector<IReduxStore, IColor>((state) => {
+  const hslObj = useSelector<IReduxStore, IHSL>((state) => {
     return state.color;
   }, shallowEqual);
 
@@ -31,10 +32,9 @@ export default function Additional(props: IProps) {
     setPower((prev) => (prev ? false : true));
   };
 
-  const colorHandler = async (hue: number) => {
-    const color = getColorObj(hue);
-    dispatch(RSetColor(color));
-    if (props.DB) await IndexedDB.updateSetting<IColor>(props.DB, "color", color);
+  const colorHandler = async (hsl: IHSL) => {
+    dispatch(RSetColor(hsl));
+    if (props.DB) await IndexedDB.updateSetting<IHSL>(props.DB, "color", hsl);
   };
 
   const deleteData = async (key: any) => {
@@ -57,6 +57,11 @@ export default function Additional(props: IProps) {
       await props.refresh();
     }
   };
+
+  useEffect(() => {
+    const colorObj = getColorObj(hslObj.hue, hslObj.saturation, hslObj.lightness);
+    setColorObj(colorObj);
+  }, [hslObj]);
 
   useEffect(() => {
     const getDB = async (DB: IDBDatabase) => {
@@ -136,10 +141,7 @@ export default function Additional(props: IProps) {
             <div className="settingArea">
               <div className="color">
                 <p>Color Theme</p>
-                <HslSelector
-                  onChange={(hue) => colorHandler(hue)}
-                  default={getHueFromColorObj(colorObj)}
-                />
+                <HslSelector onChange={(hsl) => colorHandler(hsl)} default={hslObj.hue} />
               </div>
             </div>
           ) : null}
@@ -148,8 +150,3 @@ export default function Additional(props: IProps) {
     </div>
   );
 }
-
-const getHueFromColorObj = (obj: IColor) => {
-  const string = obj.normal.split(",", 1)[0].slice(4);
-  return parseInt(string);
-};

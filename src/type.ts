@@ -24,3 +24,9 @@ export interface IColor {
   lighter: string;
   lightest: string;
 }
+
+export interface IHSL {
+  hue: number;
+  saturation: number;
+  lightness: number;
+}

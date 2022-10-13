@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import "../styles/hslSelector.scss";
+import { IHSL } from "../type";
 
 interface IProps {
-  onChange?: (hue: number) => void;
+  onChange?: (hslObj: IHSL) => void;
   default?: number;
 }
 
@@ -41,7 +42,7 @@ export default function HslSelector(props: IProps) {
   };
 
   useEffect(() => {
-    if (props.onChange) props.onChange(hue);
+    if (props.onChange) props.onChange({ hue, saturation: 100, lightness: 65 });
   }, [hue, props]);
 
   return (

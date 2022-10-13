@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import Additional from "./components/additional";
 import IndexedDB from "./indexedDB";
+import { getColorObj } from "./lib";
 import { IReduxStore, RSetColor } from "./redux";
 import Scheduler from "./scheduler";
 import "./styles/App.scss";
-import { IColor, IData } from "./type";
+import { IColor, IData, IHSL } from "./type";
 
 interface ISortedData {
   end: string;
@@ -16,9 +17,10 @@ interface ISortedData {
 function App() {
   const [IDB, setIDB] = useState<IDBDatabase>();
   const [dataArr, setDataArr] = useState<ISortedData[]>([]);
+  const [colorObj, setColorObj] = useState<IColor>(getColorObj(0, 100, 65));
 
   const dispatch = useDispatch();
-  const colorObj = useSelector<IReduxStore, IColor>((state) => {
+  const hslObj = useSelector<IReduxStore, IHSL>((state) => {
     return state.color;
   }, shallowEqual);
 
@@ -55,11 +57,16 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const colorObj = getColorObj(hslObj.hue, hslObj.saturation, hslObj.lightness);
+    setColorObj(colorObj);
+  }, [hslObj]);
+
   // Setting
   useEffect(() => {
     const setting = async () => {
       if (IDB) {
-        const colorSetting = await IndexedDB.findSetting<IColor>(IDB, "color");
+        const colorSetting = await IndexedDB.findSetting<IHSL>(IDB, "color");
         dispatch(RSetColor(colorSetting));
       }
     };

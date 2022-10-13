@@ -15,3 +15,4 @@
 - [x] Seperate completed list
 - [x] Setting
 - [x] Redux
+- [ ] Auto clear

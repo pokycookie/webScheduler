@@ -1,16 +1,19 @@
 import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
-import { getColorObj } from "./lib";
-import { IColor } from "./type";
+import { IHSL } from "./type";
 
 export interface IReduxStore {
-  color: IColor;
+  color: IHSL;
 }
 
 const initState: IReduxStore = {
-  color: getColorObj(0),
+  color: {
+    hue: 0,
+    saturation: 100,
+    lightness: 65,
+  },
 };
 
-export const RSetColor = createAction<IColor>("RSetColor");
+export const RSetColor = createAction<IHSL>("RSetColor");
 
 const reducer = createReducer(initState, (builder) => {
   builder.addCase(RSetColor, (state, action) => {

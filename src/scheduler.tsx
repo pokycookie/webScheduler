@@ -7,8 +7,9 @@ import { shallowEqual, useSelector } from "react-redux";
 import TodoList from "./components/todoList";
 import UndoBtn from "./components/undoBtn";
 import IndexedDB from "./indexedDB";
+import { getColorObj } from "./lib";
 import { IReduxStore } from "./redux";
-import { IColor, IData } from "./type";
+import { IColor, IData, IHSL } from "./type";
 
 interface IProps {
   DB?: IDBDatabase;
@@ -27,9 +28,10 @@ export default function Scheduler(props: IProps) {
   const [calendar, setCalendar] = useState<boolean>(false);
   const [optionDate, setOptionDate] = useState(new Date());
   const [undo, setUndo] = useState<IData>();
+  const [colorObj, setColorObj] = useState<IColor>(getColorObj(0, 100, 65));
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const colorObj = useSelector<IReduxStore, IColor>((state) => {
+  const hslObj = useSelector<IReduxStore, IHSL>((state) => {
     return state.color;
   }, shallowEqual);
 
@@ -67,6 +69,11 @@ export default function Scheduler(props: IProps) {
       }
     }
   };
+
+  useEffect(() => {
+    const colorObj = getColorObj(hslObj.hue, hslObj.saturation, hslObj.lightness);
+    setColorObj(colorObj);
+  }, [hslObj]);
 
   // Initailize
   useEffect(() => {
