@@ -14,29 +14,30 @@ const getOffsetRatio = (hue: number) => {
 };
 
 export default function HslSelector(props: IProps) {
-  const [offset, setOffset] = useState(props.default ? getOffsetRatio(props.default) : 0);
+  const [hueOffset, setHueOffset] = useState(props.default ? getOffsetRatio(props.default) : 0);
   const [hue, setHue] = useState(props.default || 0);
+  const [saturation, setSaturation] = useState(100);
+  const [lightness, setLightness] = useState(65);
 
-  const clickHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const hueClickHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const offsetX = e.nativeEvent.offsetX;
-    // const width = e.currentTarget.clientWidth;
     const tempHue = Math.ceil((offsetX / width) * 360);
     if (offsetX > 0 && tempHue > 0 && tempHue < 360) {
-      setOffset(offsetX);
+      setHueOffset(offsetX);
       setHue(tempHue);
     }
   };
 
-  const wheelHandler = (e: React.WheelEvent<HTMLDivElement>) => {
+  const hueWheelHandler = (e: React.WheelEvent<HTMLDivElement>) => {
     if (e.deltaY < 0) {
       if (hue < 360) {
         setHue((prev) => prev + 1);
-        setOffset(((hue + 1) / 360) * width);
+        setHueOffset(((hue + 1) / 360) * width);
       }
     } else {
       if (hue > 0) {
         setHue((prev) => prev - 1);
-        setOffset(((hue - 1) / 360) * width);
+        setHueOffset(((hue - 1) / 360) * width);
       }
     }
   };
@@ -47,8 +48,25 @@ export default function HslSelector(props: IProps) {
 
   return (
     <div className="hslSelector">
-      <div className="rainbow" onClick={clickHandler} onWheel={wheelHandler}>
-        <div className="selector" style={{ left: offset - 7 }}></div>
+      <p>{hue}</p>
+      <div className="rainbow element" onClick={hueClickHandler} onWheel={hueWheelHandler}>
+        <div className="selector" style={{ left: hueOffset - 7 }}></div>
+      </div>
+      <div
+        className="element"
+        style={{
+          background: `linear-gradient(90deg, hsl(${hue}, ${saturation}%, 0%) 0%, hsl(${hue}, ${saturation}%, 100%) 100%)`,
+        }}
+      >
+        <div className="selector"></div>
+      </div>
+      <div
+        className="element"
+        style={{
+          background: `linear-gradient(90deg, hsl(${hue}, 0%, ${lightness}%) 0%, hsl(${hue}, 100%, ${lightness}%) 100%)`,
+        }}
+      >
+        <div className="selector"></div>
       </div>
     </div>
   );

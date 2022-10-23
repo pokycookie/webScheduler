@@ -4,10 +4,6 @@
   box-sizing: border-box;
 
   .rainbow {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    position: relative;
     background: linear-gradient(
       90deg,
       hsl(0, 100%, 65%) 0%,
@@ -23,6 +19,14 @@
       hsl(360, 100%, 65%) 100%
     );
     overflow: hidden;
+  }
+
+  .element {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 5px;
 
     .selector {
       width: 14px;
