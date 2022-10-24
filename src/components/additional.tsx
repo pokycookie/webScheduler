@@ -141,7 +141,7 @@ export default function Additional(props: IProps) {
             <div className="settingArea">
               <div className="color">
                 <p>Color Theme</p>
-                <HslSelector onChange={(hsl) => colorHandler(hsl)} default={hslObj.hue} />
+                <HslSelector onChange={(hsl) => colorHandler(hsl)} default={hslObj} />
               </div>
             </div>
           ) : null}

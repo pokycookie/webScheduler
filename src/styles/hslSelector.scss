@@ -18,7 +18,6 @@
       hsl(324, 100%, 65%) 90%,
       hsl(360, 100%, 65%) 100%
     );
-    overflow: hidden;
   }
 
   .element {
@@ -27,6 +26,7 @@
     border-radius: 10px;
     position: relative;
     margin-bottom: 5px;
+    overflow: hidden;
 
     .selector {
       width: 14px;
@@ -39,5 +39,14 @@
       pointer-events: none;
       transition: left 0.3s ease-in-out;
     }
+  }
+
+  p {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 12px;
+    margin-top: 5px;
   }
 }
